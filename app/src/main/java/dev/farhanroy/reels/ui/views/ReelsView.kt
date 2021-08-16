@@ -6,7 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.skydoves.landscapist.glide.GlideImage
 import dev.farhanroy.reels.ui.components.VideoPlayer
 import dev.farhanroy.reels.util.DummyData
@@ -37,14 +43,15 @@ fun ReelsView() {
 @Composable
 private fun ReelsHeader() {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(
                 horizontal = horizontalPadding,
                 vertical = verticalPadding
             ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text("Reels", color = Color.White)
+        Text("Reels", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 21.sp)
         Icon(
             ImageBitmap.imageResource(id = R.drawable.ic_outlined_camera),
             tint = Color.White,
@@ -86,11 +93,16 @@ private fun ReelsList() {
 private fun ReelFooter(
     reel: Reel
 ) {
+    Row(modifier = Modifier.fillMaxWidth().padding(start = 18.dp, bottom = 18.dp), verticalAlignment = Alignment.Bottom) {
+        FooterUserData(reel = reel, modifier = Modifier.weight(8f))
+        FooterUserAction(reel = reel, modifier = Modifier.weight(2f))
+    }
+}
+
+@Composable
+private fun FooterUserData(reel: Reel, modifier: Modifier) {
     Column(
-        modifier = Modifier.padding(
-            horizontal = horizontalPadding,
-            vertical = verticalPadding
-        ),
+        modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
 
@@ -101,7 +113,8 @@ private fun ReelFooter(
             GlideImage(
                 imageModel = reel.userImage,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier
+                    .size(28.dp)
                     .background(color = Color.Gray, shape = CircleShape)
                     .clip(CircleShape),
                 contentDescription = null
@@ -125,40 +138,67 @@ private fun ReelFooter(
                 color = Color.White,
                 style = MaterialTheme.typography.subtitle2
             )
+
+
         }
 
-        Spacer(modifier = Modifier.height(verticalPadding))
+        Spacer(modifier = Modifier.height(horizontalPadding))
 
-        // actions
+        // comment
+        Text(text = "wkwkwkwk... 😄", color = Color.White)
+
+        Spacer(modifier = Modifier.height(horizontalPadding))
+
+        // Audio
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                UserAction(R.drawable.ic_outlined_favorite)
-                Spacer(modifier = Modifier.width(horizontalPadding))
-                UserAction(R.drawable.ic_outlined_comment)
-                Spacer(modifier = Modifier.width(horizontalPadding))
-                UserAction(R.drawable.ic_dm)
-            }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                UserActionWithText(
-                    drawableRes = R.drawable.ic_outlined_favorite,
-                    text = reel.likesCount.toString()
+            Text(reel.userName, color = Color.White)
+            Spacer(modifier = Modifier.width(horizontalPadding))
+            Canvas(modifier = Modifier.size(5.dp), onDraw = {
+                drawCircle(
+                    color = Color.White,
+                    radius = 8f
                 )
-                Spacer(modifier = Modifier.width(horizontalPadding))
-                UserActionWithText(
-                    drawableRes = R.drawable.ic_outlined_favorite,
-                    text = reel.commentsCount.toString()
-                )
-            }
+            })
+            Spacer(modifier = Modifier.width(horizontalPadding))
+            Text(
+                text = "Audio asli",
+                color = Color.White
+            )
         }
+
+
+    }
+}
+
+@Composable
+private fun FooterUserAction(reel: Reel, modifier: Modifier) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        UserActionWithText(
+            drawableRes = R.drawable.ic_outlined_favorite,
+            text = reel.likesCount.toString()
+        )
+        Spacer(modifier = Modifier.height(28.dp))
+        UserActionWithText(
+            drawableRes = R.drawable.ic_outlined_comment,
+            text = reel.commentsCount.toString()
+        )
+        Spacer(modifier = Modifier.height(28.dp))
+        UserAction(R.drawable.ic_dm)
+        Spacer(modifier = Modifier.height(28.dp))
+        Icon(imageVector = Icons.Default.MoreVert, contentDescription = null, tint = Color.White)
+        Spacer(modifier = Modifier.height(28.dp))
+        GlideImage( imageModel = reel.userImage,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(28.dp)
+                .background(color = Color.Gray, shape = RoundedCornerShape(6.dp))
+                .clip(RoundedCornerShape(6.dp)),
+            contentDescription = null)
 
     }
 }
@@ -168,7 +208,7 @@ private fun UserAction(@DrawableRes drawableRes: Int) {
     Icon(
         ImageBitmap.imageResource(id = drawableRes),
         tint = Color.White,
-        modifier = Modifier.size(24.dp),
+        modifier = Modifier.size(26.dp),
         contentDescription = ""
     )
 }
@@ -181,14 +221,15 @@ private fun UserActionWithText(
     Icon(
         ImageBitmap.imageResource(id = drawableRes),
         tint = Color.White,
-        modifier = Modifier.size(18.dp),
+        modifier = Modifier.size(28.dp),
         contentDescription = ""
     )
-    Spacer(modifier = Modifier.width(horizontalPadding / 2))
+    Spacer(modifier = Modifier.height(6 .dp))
     Text(
         text = text,
         color = Color.White,
-        style = MaterialTheme.typography.body2
+        fontSize = 13.sp,
+        fontWeight = FontWeight.SemiBold
     )
 }
 
