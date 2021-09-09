@@ -42,16 +42,6 @@ fun VideoPlayer(uri: Uri) {
     exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
     exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
 
-/*    AndroidView(factory = {
-        PlayerView(context).apply {
-            hideController()
-            useController = false
-            resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-            player = exoPlayer
-            layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-        }
-    })*/
-
     DisposableEffect(AndroidView(factory = {
         PlayerView(context).apply {
             hideController()
@@ -61,10 +51,7 @@ fun VideoPlayer(uri: Uri) {
             player = exoPlayer
             layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         }
-    })) {
-        onDispose {
-            exoPlayer.release()
-        }
+    })){
+        onDispose { exoPlayer.release() }
     }
-
 }
